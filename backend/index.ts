@@ -1,15 +1,19 @@
 import express, { Request, Response } from "express";
-import dotenv from 'dotenv';
+import userRoutes from './routes/user.routes'
+import { connectToDatabase } from "./utils/database";
 
-dotenv.config();
 
 const app = express();
 const port = 8000;
+
+app.use(express.json())
+
+app.use('/api/v1/users', userRoutes)
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');
 });
 
-app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
+app.listen(port, async () => {
+    await connectToDatabase()
 });
