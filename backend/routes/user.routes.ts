@@ -1,11 +1,12 @@
 import express from "express";
 import { createUser, loginUser } from "../controllers/user.controller";
+import { tryCatch } from "../utils/tryCatch";
 
 const router = express.Router()
 
-router.post("/create", createUser)
+router.post("/create", tryCatch(createUser))
 
-router.post("/login", loginUser)
+router.post("/login", tryCatch(loginUser))
 
 
 

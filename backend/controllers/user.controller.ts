@@ -3,7 +3,8 @@ import { mailService } from "../utils/mail.transport";
 import env from '../utils/ENV_VARIABLES'
 import { MailOptions } from "nodemailer/lib/json-transport";
 import { User } from "../models/User.model";
-import CustomError from "../utils/CustomError";
+import { CustomError } from "../utils/CustomError";
+
 
 export async function createUser(req: Request, res: Response) {
     const email = req.body.email
@@ -29,12 +30,11 @@ export async function createUser(req: Request, res: Response) {
 }
 
 
-export async function loginUser(req: Request, res: Response, next: NextFunction) {
+export async function loginUser(req: Request, res: Response) {
     const { email, otp } = req.body
     const user = await User.findOne({ email })
     if (!user) {
-        const err = new CustomError("User not found", 500)
-        next(err)
+        throw new CustomError("User not found", 404)
     } else {
         res.status(200).json({ message: "User Found" })
     }

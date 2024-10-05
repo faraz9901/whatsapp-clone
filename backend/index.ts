@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import userRoutes from './routes/user.routes'
 import { connectToDatabase } from "./utils/database";
-import ErrorHandler from "./controllers/error.controller";
+import { ErrorHandler } from "./utils/CustomError";
+
 
 const app = express();
 const port = 8000;
