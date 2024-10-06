@@ -1,17 +1,31 @@
+import { useState } from 'react'
+import EmailInput from '../components/EmailInput'
+import logo from '/logo.svg'
+import OTP from '../components/OTPInput'
+
+
 export default function HomePage() {
+
+    const [isEmailSent, setIsEmailSent] = useState(false)
     return (
-        <div className="h-screen w-screen flex flex-col justify-center items-center bg-gradient-to-t from-purple-400 to-purple-800 ">
+        <>
+            <img src="/bg3.jpg" className="z-10    fixed top-0 h-screen w-screen" />
+            <div className="fixed z-20 top-0 flex flex-col gap-10 justify-center items-center h-screen w-screen text-white">
 
-            <div className="w-[60vh] h-[60vh] ">
+                <img src={logo} className='w-20 h-20 rounded-full p-3 border border-white' />
 
-                <img src="/login-image.jpg" className="  rounded-lg w-[60vh] h-[45vh]" />
-                <div className="w-full">
+                {!isEmailSent &&
+                    <div className='flex flex-col gap-10'>
+                        <EmailInput setShow={setIsEmailSent} />
+                    </div>}
 
-                    <input type="text" className="p-5 w-full rounded-lg " placeholder="Email Address" />
-
-                </div>
+                {
+                    isEmailSent &&
+                    <div className=' flex flex-col gap-8 items-center' >
+                        <OTP setShow={setIsEmailSent} />
+                    </div>
+                }
             </div>
-
-        </div>
+        </>
     )
 }
