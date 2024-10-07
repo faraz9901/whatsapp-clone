@@ -33,7 +33,9 @@ export default function OTPInputBox({ index, setOtp, otp, value, setFocus, focus
 
         setOtp(currentState)
 
-        setFocus(focus + 1)
+        if (value) {
+            setFocus(index + 1)
+        }
     }
 
     return (
