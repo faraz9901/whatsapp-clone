@@ -7,9 +7,10 @@ interface OTPInputProps {
     value: string | number
     focus: number
     setFocus: (value: number) => void
+    disabled: boolean
 }
 
-export default function OTPInputBox({ index, setOtp, otp, value, setFocus, focus }: OTPInputProps) {
+export default function OTPInputBox({ index, setOtp, otp, value, setFocus, focus, disabled }: OTPInputProps) {
 
     const otpRef = useRef<HTMLInputElement>(null)
 
@@ -48,7 +49,8 @@ export default function OTPInputBox({ index, setOtp, otp, value, setFocus, focus
             maxLength={1}
             value={value}
             onChange={handleChange}
-            className="w-12 rounded-lg h-12 focus:outline-none focus:scale-105 text-black text-2xl text-center"
+            disabled={disabled}
+            className="w-12 rounded-lg h-12 focus:outline-none focus:scale-105 text-black text-2xl text-center disabled:opacity-30"
         />
     )
 }

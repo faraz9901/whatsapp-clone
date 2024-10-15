@@ -1,8 +1,9 @@
 import { SyntheticEvent, useState } from "react"
 import { CircleUserRound } from "lucide-react"
-import { validateEmailAddress } from "../utils/functions"
+import { errorToast, request, validateEmailAddress } from "../utils/functions"
 import { ClipLoader } from "react-spinners"
 import { toast } from "react-toastify"
+import { useSearchParams } from "react-router-dom"
 
 interface EmailInputProps {
     setShow: (value: boolean) => void
@@ -12,28 +13,31 @@ export default function EmailInput({ setShow }: EmailInputProps) {
     const [isChecked, setIsChecked] = useState(false)
     const [email, setEmail] = useState("")
     const [loading, setLoading] = useState(false)
+    const [_, setSearchParams] = useSearchParams()
 
-    const sendEmail = (e: SyntheticEvent<HTMLFormElement>) => {
+    const sendEmail = async (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault()
         const isEmailValid = validateEmailAddress(email)
         if (isEmailValid) {
             setLoading(true)
-
-            setTimeout(() => {
+            try {
+                const result = await request.post('/users/login', { email })
+                if (result.data.success) {
+                    toast.success('An OTP is send to your email', {
+                        autoClose: 2000
+                    })
+                    setSearchParams({ email })
+                    setTimeout(() => {
+                        setShow(true)
+                    }, 2500);
+                }
+            } catch (error) {
+                errorToast(error)
+            } finally {
                 setLoading(false)
-                setShow(true)
-            }, 2500);
-
+            }
         } else {
-            toast.error('Invalid Email', {
-                position: 'bottom-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnFocusLoss: false,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.error('Invalid Email')
         }
     }
 
