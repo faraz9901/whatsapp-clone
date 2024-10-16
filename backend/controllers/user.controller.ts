@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { mailService } from "../utils/mail.transport";
 import env from '../utils/ENV_VARIABLES'
 import { MailOptions } from "nodemailer/lib/json-transport";
@@ -23,6 +23,8 @@ export async function validateOtp(req: Request, res: Response) {
     if (user.otp !== otp) {
         throw new CustomError("Wrong OTP", 400)
     }
+
+    await User.findOneAndUpdate({ email }, { otp: null })
 
     res.json({ message: "User Logged In" })
 }

@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react"
 import { CircleUserRound } from "lucide-react"
-import { errorToast, request, validateEmailAddress } from "../utils/functions"
+import { errorToast, request, tryCatch, validateEmailAddress } from "../utils/functions"
 import { ClipLoader } from "react-spinners"
 import { toast } from "react-toastify"
 import { useSearchParams } from "react-router-dom"
@@ -20,22 +20,24 @@ export default function EmailInput({ setShow }: EmailInputProps) {
         const isEmailValid = validateEmailAddress(email)
         if (isEmailValid) {
             setLoading(true)
-            try {
-                const result = await request.post('/users/login', { email })
-                if (result.data.success) {
-                    toast.success('An OTP is send to your email', {
-                        autoClose: 2000
-                    })
-                    setSearchParams({ email })
-                    setTimeout(() => {
-                        setShow(true)
-                    }, 2500);
-                }
-            } catch (error) {
-                errorToast(error)
-            } finally {
-                setLoading(false)
+
+            const { data, error } = await tryCatch(() => request.post('/users/login', { email }))
+
+            if (data) {
+                toast.success('An OTP is send to your email', {
+                    autoClose: 2000
+                })
+                setSearchParams({ email })
+                setTimeout(() => {
+                    setShow(true)
+                }, 2500);
             }
+
+            if (error) {
+                errorToast(error)
+            }
+
+            setLoading(false)
         } else {
             toast.error('Invalid Email')
         }

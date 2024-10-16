@@ -8,6 +8,7 @@ function App() {
 
   return (
     <>
+      <img src="/bg3.jpg" className="-z-10 fixed top-0 h-screen w-screen" />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/chat" element={<ChatPage />} />

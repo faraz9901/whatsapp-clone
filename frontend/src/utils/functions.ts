@@ -18,3 +18,14 @@ export const request = axios.create({
 export const errorToast = (error: any) => {
     toast.error(error.response?.data?.message || error?.message || "Unexpected Error Occured")
 }
+
+
+export async function tryCatch(request: () => any): Promise<{ data: any, error: any }> {
+    try {
+        const { data } = await request()
+        return { data, error: null }
+    } catch (error) {
+        return { error, data: null }
+    }
+}
+
