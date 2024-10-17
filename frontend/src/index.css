@@ -3,5 +3,11 @@
 @tailwind utilities;
 
 .background-color {
-    @apply bg-gradient-to-b from-purple-100 to-purple-900
+    @apply bg-purple-300 bg-opacity-40
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 0px;
 }

@@ -3,7 +3,7 @@ import SideBar from "../components/SideBar";
 
 export default function ChatPage(): JSX.Element {
     return (
-        <main className="flex justify-center items-center w-screen h-screen text-white">
+        <main className="flex justify-center items-center w-screen h-screen text-slate-200">
             <div className="w-[97vw] h-[97vh] backdrop-blur-lg rounded-lg p-5 flex gap-5">
                 <SideBar />
                 <ChatScreen />
