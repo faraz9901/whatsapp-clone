@@ -2,7 +2,7 @@ import { MailCheck } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { errorToast, request, tryCatch } from "../utils/functions";
+import { errorToast, request, tryCatch, validateEmailAddress } from "../utils/functions";
 
 interface OtpInputProps {
     setShow: (value: boolean) => void
@@ -14,6 +14,30 @@ export default function OTP({ setShow }: OtpInputProps) {
     const email = searchParams.get("email")
     const navigate = useNavigate()
     const [formSubmitting, setFormSubmitting] = useState<boolean>(false)
+
+    const sendEmail = async () => {
+        const isEmailValid = validateEmailAddress(email || "")
+        if (isEmailValid) {
+            setFormSubmitting(true)
+            const { data, error } = await tryCatch(() => request.post('/users/login', { email }))
+
+            if (data) {
+                toast.success('An OTP is send to your email', {
+                    autoClose: 2000
+                })
+            }
+
+            if (error) {
+                errorToast(error)
+            }
+
+            setFormSubmitting(false)
+
+        } else {
+            setShow(false)
+            toast.error('Please type your email address again!')
+        }
+    }
 
     const validateOtp = async () => {
 
@@ -70,7 +94,7 @@ export default function OTP({ setShow }: OtpInputProps) {
                     />
 
                 </div>
-                <span className="text-center mt-2">Didn't get the code? <span className="underline text-gray-400 cursor-pointer">Click to resend</span></span>
+                <span className="text-center mt-2">Didn't get the code? <span onClick={sendEmail} className="underline text-gray-400 cursor-pointer active:text-gray-800">Click to resend</span></span>
             </div >
 
             <div className="flex gap-10">
@@ -84,7 +108,7 @@ export default function OTP({ setShow }: OtpInputProps) {
                 >
                     Cancel
                 </button>
-                <button type="button" onClick={validateOtp} className="p-3 rounded-2xl hover:scale-105 bg-red-500 w-20" >Verify</button>
+                <button type="button" onClick={validateOtp} disabled={otp.length !== 6} className="p-3 rounded-2xl hover:scale-105 bg-red-500 w-20 disabled:opacity-50" >Verify</button>
             </div>
 
         </>

@@ -9,7 +9,7 @@ export default function ChatSearch() {
                 <input
                     type="search"
                     placeholder="Search"
-                    className="rounded-lg  shadow-sm  focus:outline-none focus:scale-105  p-1 text-black"
+                    className="rounded-lg bg-purple-600 bg-opacity-25 shadow-sm  focus:outline-none focus:scale-105  p-1 text-white placeholder:text-inherit"
                 />
             </div>
         </section >

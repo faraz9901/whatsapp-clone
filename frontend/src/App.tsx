@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage"
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ChatPage from "./pages/ChatPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <ToastContainer position="bottom-right" />
     </>
