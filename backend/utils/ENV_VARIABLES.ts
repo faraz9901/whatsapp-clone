@@ -7,6 +7,7 @@ interface ENV {
     Mail_Password: string
     DB_URI: string
     ALLOWED_ORIGIN: string
+    JWT_SECRET: string
 }
 
 
@@ -15,6 +16,7 @@ const env: ENV = {
     Mail_Password: process.env.MAIL_PASSWORD || "",
     DB_URI: process.env.DB_URI || "",
     ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || "",
+    JWT_SECRET: process.env.JWT_SECRET || ""
 }
 
 export default env

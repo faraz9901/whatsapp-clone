@@ -1,14 +1,25 @@
 import { Request, Response } from "express";
+import Joi from "joi";
+import jwt from 'jsonwebtoken'
+
 import { mailService } from "../utils/mail.transport";
 import env from '../utils/ENV_VARIABLES'
 import { MailOptions } from "nodemailer/lib/json-transport";
 import { User } from "../models/User.model";
-import Joi from "joi";
 import { CustomError } from "../utils/CustomError";
 
 const schema = Joi.object({
     email: Joi.string().required().email()
 });
+
+const generateOtp = () => {
+    const numbers = "1234567890"
+    let otp = "";
+    for (let index = 0; index < 6; index++) {
+        otp = otp + numbers[Math.floor(Math.random() * 10)]
+    }
+    return +otp
+}
 
 
 export async function validateOtp(req: Request, res: Response) {
@@ -26,7 +37,15 @@ export async function validateOtp(req: Request, res: Response) {
 
     await User.findOneAndUpdate({ email }, { otp: null })
 
-    res.json({ message: "User Logged In" })
+    const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.cookie('Token', token, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: "strict"
+    });
+
+    res.status(202).json({ message: "User Logged In" })
 }
 
 
@@ -39,11 +58,13 @@ export async function loginUser(req: Request, res: Response) {
         throw new CustomError("Invalid Email", 400)
     }
 
-    const otp = Math.round(Math.random() * 1000000)
+    const otp = generateOtp()
 
     await User.findOneAndUpdate({ email }, { otp }, { upsert: true })
 
-    res.json({
+
+
+    res.status(202).json({
         success: true,
         message: "OTP is send to your email address"
     })
