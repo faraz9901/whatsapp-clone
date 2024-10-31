@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EmailInput from '../components/EmailInput'
 import logo from '/logo.svg'
 import OTP from '../components/OTPInput'
@@ -6,6 +6,11 @@ import OTP from '../components/OTPInput'
 
 export default function HomePage() {
     const [isEmailSent, setIsEmailSent] = useState(false)
+
+    useEffect(() => {
+        document.title = "F-Chat Login"
+    }, [])
+
     return (
         <>
 

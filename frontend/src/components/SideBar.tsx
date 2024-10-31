@@ -1,6 +1,9 @@
 import { Info, LogOut, MessageSquareText, Send, Settings } from "lucide-react";
+import { useAuth } from "../store/useAuth";
 
 export default function SideBar() {
+    const logout = useAuth((state) => state.logOut)
+
     return (
         <section className="background-color w-1/6 rounded-lg  py-5 flex flex-col justify-between px-3 h-full font-semibold">
             <div className="inline-flex items-center gap-2 mb-10">
@@ -24,7 +27,7 @@ export default function SideBar() {
 
             </div>
 
-            <div className="inline-flex gap-2 hover:cursor-pointer">
+            <div onClick={logout} className="inline-flex gap-2 hover:cursor-pointer  hover:scale-105 p-2 rounded-md active:scale-95">
                 <LogOut />  Logout
             </div>
         </section>

@@ -7,6 +7,8 @@ import env from '../utils/ENV_VARIABLES'
 import { MailOptions } from "nodemailer/lib/json-transport";
 import { User } from "../models/User.model";
 import { CustomError } from "../utils/CustomError";
+import { OTP } from "../models/Otp.model";
+import { MyRequest } from "./chat.controller";
 
 const schema = Joi.object({
     email: Joi.string().required().email()
@@ -18,41 +20,53 @@ const generateOtp = () => {
     for (let index = 0; index < 6; index++) {
         otp = otp + numbers[Math.floor(Math.random() * 10)]
     }
-    return +otp
+    return otp
 }
 
 
 export async function validateOtp(req: Request, res: Response) {
     const { email, otp } = req.body
 
-    const user = await User.findOne({ email })
+    const isValidUser = await OTP.findOne({ email })
 
-    if (!user) {
+    if (!isValidUser) {
         throw new CustomError("User not found", 404)
     }
 
-    if (user.otp !== otp) {
+    if (isValidUser.otp !== otp) {
         throw new CustomError("Wrong OTP", 400)
     }
 
-    await User.findOneAndUpdate({ email }, { otp: null })
+    const [user] = await Promise.all([
+        User.findOneAndUpdate({ email }, { last_signed_in: new Date() }, { upsert: true, new: true }),
+        OTP.findOneAndDelete({ email })
+    ])
 
-    const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
+    if (user) {
+        const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.cookie('Token', token, {
-        httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: "strict"
-    });
+        res.cookie('Token', token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: "strict"
+        });
 
-    res.status(202).json({ message: "User Logged In" })
+        res.status(202).json({
+            success: true,
+            message: "User Logged In",
+            content: user
+        })
+
+    } else {
+        throw new CustomError("Cannot create the user", 400)
+    }
 }
 
 
 export async function loginUser(req: Request, res: Response) {
     const { email } = req.body
 
-    const { error, value } = schema.validate({ email });
+    const { error } = schema.validate({ email });
 
     if (error) {
         throw new CustomError("Invalid Email", 400)
@@ -60,9 +74,7 @@ export async function loginUser(req: Request, res: Response) {
 
     const otp = generateOtp()
 
-    await User.findOneAndUpdate({ email }, { otp }, { upsert: true })
-
-
+    await OTP.findOneAndUpdate({ email }, { otp }, { upsert: true })
 
     res.status(202).json({
         success: true,
@@ -76,10 +88,30 @@ export async function loginUser(req: Request, res: Response) {
         text: `
     Hello ${email}
 
-    Your otp is ${otp}
+    Your OTP is ${otp}
      `
     };
 
     // await mailService.sendMail(mailOptions)
+
+}
+
+export const getCurrentUser = (req: MyRequest, res: Response) => {
+    console.log(req.user);
+    res.status(200).json({
+        success: true,
+        content: req.user
+    })
+}
+
+
+export const logoutUser = (req: Request, res: Response) => {
+
+    res.clearCookie("Token")
+
+    res.status(200).json({
+        success: true,
+        message: "User Logged out"
+    })
 
 }

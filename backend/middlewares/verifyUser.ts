@@ -7,7 +7,7 @@ import { CustomError } from "../utils/CustomError";
 
 export const verifyUser = async (req: any, res: Response, next: NextFunction) => {
 
-    const token = req.cookies.Token
+    const token = req?.cookies?.Token
 
     if (!token) {
         throw new CustomError("Token not provided! Please Sign In", 401)
@@ -20,6 +20,11 @@ export const verifyUser = async (req: any, res: Response, next: NextFunction) =>
     }
 
     const user = await User.findOne({ _id: data.id })
+
+    if (!user) {
+        throw new CustomError("User not found ", 404)
+    }
+
     req.user = user
     next()
 }

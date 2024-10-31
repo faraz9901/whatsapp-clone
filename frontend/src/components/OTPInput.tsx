@@ -2,7 +2,8 @@ import { MailCheck } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { errorToast, request, tryCatch, validateEmailAddress } from "../utils/functions";
+import { validateEmailAddress } from "../utils/functions";
+import { useAuth } from "../store/useAuth";
 
 interface OtpInputProps {
     setShow: (value: boolean) => void
@@ -11,24 +12,22 @@ interface OtpInputProps {
 export default function OTP({ setShow }: OtpInputProps) {
     const [otp, setOtp] = useState("")
     const [searchParams] = useSearchParams()
-    const email = searchParams.get("email")
+    const email: string | null = searchParams.get("email")
     const navigate = useNavigate()
     const [formSubmitting, setFormSubmitting] = useState<boolean>(false)
+    const requestForOtp = useAuth((state) => state.requestForOtp)
+    const validateOtp = useAuth((state) => state.validateOtp)
 
     const sendEmail = async () => {
         const isEmailValid = validateEmailAddress(email || "")
-        if (isEmailValid) {
+        if (email && isEmailValid) {
             setFormSubmitting(true)
-            const { data, error } = await tryCatch(() => request.post('/users/login', { email }))
+            const isSuccess = await requestForOtp(email)
 
-            if (data) {
+            if (isSuccess) {
                 toast.success('An OTP is send to your email', {
                     autoClose: 2000
                 })
-            }
-
-            if (error) {
-                errorToast(error)
             }
 
             setFormSubmitting(false)
@@ -39,7 +38,13 @@ export default function OTP({ setShow }: OtpInputProps) {
         }
     }
 
-    const validateOtp = async () => {
+    const checkOtp = async () => {
+
+        if (!email) {
+            setShow(false)
+            toast.error('Please type your email address again!')
+            return
+        }
 
         if (otp.length !== 6) {
             toast.error("Invalid OTP")
@@ -53,19 +58,16 @@ export default function OTP({ setShow }: OtpInputProps) {
 
         setFormSubmitting(true)
 
-        const { data, error } = await tryCatch(() => request.post("/users/validate-otp", { email, otp: +otp }))
+        const isSuccess = await validateOtp(email, otp)
 
-        if (error) {
-            errorToast(error)
+
+        if (isSuccess) {
+            toast.success("User Logged In", {
+                autoClose: 1000
+            })
+            navigate("/chat")
         }
-
-        if (data) {
-            toast.success("User Logged In")
-            navigate("/chat", { replace: true })
-        }
-
         setFormSubmitting(false)
-
     }
 
     return (
@@ -87,7 +89,7 @@ export default function OTP({ setShow }: OtpInputProps) {
                         className="p-2  focus:scale-105 focus:outline-none text-gray-700 rounded-lg  w-64"
                         value={otp}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') validateOtp()
+                            if (e.key === 'Enter') checkOtp()
                         }}
                         onChange={(e) => setOtp(e.target.value)}
                         disabled={formSubmitting}
@@ -108,7 +110,7 @@ export default function OTP({ setShow }: OtpInputProps) {
                 >
                     Cancel
                 </button>
-                <button type="button" onClick={validateOtp} disabled={otp.length !== 6} className="p-3 rounded-2xl hover:scale-105 bg-red-500 w-20 disabled:opacity-50" >Verify</button>
+                <button type="button" onClick={checkOtp} disabled={otp.length !== 6} className="p-3 rounded-2xl hover:scale-105 bg-red-500 w-20 disabled:opacity-50" >Verify</button>
             </div>
 
         </>

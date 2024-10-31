@@ -43,8 +43,8 @@ export default function Inbox() {
             <div className="text-semibold">Inbox</div>
 
             <div className="py-4 ">
-                {chats?.map((chat) => (
-                    <Friend details={chat} />
+                {chats?.map((chat, i) => (
+                    <Friend key={i} details={chat} />
                 ))}
             </div>
         </section>

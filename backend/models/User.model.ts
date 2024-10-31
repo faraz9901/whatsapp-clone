@@ -6,9 +6,9 @@ export const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    otp: {
-        type: Number
-    },
+    last_signed_in: {
+        type: Date
+    }
 });
 
 export const User = mongoose.model('User', userSchema);

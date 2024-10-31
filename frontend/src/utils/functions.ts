@@ -19,8 +19,14 @@ export const errorToast = (error: any) => {
     toast.error(error.response?.data?.message || error?.message || "Unexpected Error Occured")
 }
 
+type apiDataType = {
+    success: boolean
+    content?: any
+    message?: string
+}
 
-export async function tryCatch(request: () => any): Promise<{ data: any, error: any }> {
+
+export async function tryCatch(request: () => any): Promise<{ data: apiDataType | null, error: any }> {
     try {
         const { data } = await request()
         return { data, error: null }

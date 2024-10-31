@@ -1,18 +1,20 @@
 import { SyntheticEvent, useState } from "react"
 import { CircleUserRound } from "lucide-react"
-import { errorToast, request, tryCatch, validateEmailAddress } from "../utils/functions"
+import { validateEmailAddress } from "../utils/functions"
 import { ClipLoader } from "react-spinners"
 import { toast } from "react-toastify"
 import { useSearchParams } from "react-router-dom"
+import { useAuth } from "../store/useAuth"
 
 interface EmailInputProps {
     setShow: (value: boolean) => void
 }
 
 export default function EmailInput({ setShow }: EmailInputProps) {
-    const [isChecked, setIsChecked] = useState(false)
-    const [email, setEmail] = useState("")
-    const [loading, setLoading] = useState(false)
+    const requestForOtp = useAuth((state) => state.requestForOtp)
+    const [isChecked, setIsChecked] = useState<boolean>(false)
+    const [email, setEmail] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
     const [_, setSearchParams] = useSearchParams()
 
     const sendEmail = async (e: SyntheticEvent<HTMLFormElement>) => {
@@ -21,9 +23,9 @@ export default function EmailInput({ setShow }: EmailInputProps) {
         if (isEmailValid) {
             setLoading(true)
 
-            const { data, error } = await tryCatch(() => request.post('/users/login', { email }))
+            const isSuccess = await requestForOtp(email)
 
-            if (data) {
+            if (isSuccess) {
                 toast.success('An OTP is send to your email', {
                     autoClose: 2000
                 })
@@ -31,10 +33,6 @@ export default function EmailInput({ setShow }: EmailInputProps) {
                 setTimeout(() => {
                     setShow(true)
                 }, 2500);
-            }
-
-            if (error) {
-                errorToast(error)
             }
 
             setLoading(false)
@@ -62,7 +60,7 @@ export default function EmailInput({ setShow }: EmailInputProps) {
             <div className='flex flex-col items-center'>
                 <button
                     disabled={!isChecked}
-                    className='bg-red-500 p-4 w-96 rounded-2xl hover:scale-105 disabled:opacity-50 disabled:scale-100'
+                    className='bg-red-500 p-4 w-96 rounded-2xl hover:scale-105 disabled:opacity-50 disabled:scale-100 focus:outline-none focus:scale-105'
                     type='submit'
                     tabIndex={3}
                 >
@@ -72,7 +70,7 @@ export default function EmailInput({ setShow }: EmailInputProps) {
                     <div className='flex items-center mt-4 gap-2 w-96'>
                         <input
                             type='checkbox'
-                            className='rounded-full'
+                            className='rounded-full focus:outline-white focus:outline-1'
                             checked={isChecked}
                             tabIndex={2}
                             onChange={() => setIsChecked((prev) => !prev)}
