@@ -39,7 +39,7 @@ const chats = [{
 
 export default function Inbox() {
     return (
-        <section className="background-color w-1/3 p-3 rounded-lg h-[80vh] overflow-auto">
+        <section className="background-color w-1/3 p-3 rounded-lg h-[75vh] overflow-auto">
             <div className="text-semibold">Inbox</div>
 
             <div className="py-4 ">

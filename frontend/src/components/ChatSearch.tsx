@@ -1,16 +1,19 @@
+
 export default function ChatSearch() {
     return (
-        <section className="background-color  border-solid rounded-lg  w-full h-[10vh] px-10  flex justify-between items-center text-white" >
+        <section className="background-color rounded-lg px-10   h-full  flex justify-between items-center text-white" >
             <div className="text-xl">
                 Chats
             </div>
 
-            <div>
+            <div className="flex">
                 <input
                     type="search"
-                    placeholder="Search"
-                    className="rounded-lg bg-purple-600 bg-opacity-25 shadow-sm  focus:outline-none focus:scale-105  p-1 text-white placeholder:text-inherit"
+                    placeholder="Search chats..."
+                    className={` rounded-lg  shadow-sm  focus:outline-none text-black    py-1 px-3 focus:scale-105  placeholder:text-inherit `}
                 />
+
+
             </div>
         </section >
     )

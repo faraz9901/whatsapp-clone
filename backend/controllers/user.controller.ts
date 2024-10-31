@@ -37,29 +37,47 @@ export async function validateOtp(req: Request, res: Response) {
         throw new CustomError("Wrong OTP", 400)
     }
 
-    const [user] = await Promise.all([
-        User.findOneAndUpdate({ email }, { last_signed_in: new Date() }, { upsert: true, new: true }),
-        OTP.findOneAndDelete({ email })
-    ])
+    const userExists = await User.findOne({ email })
 
-    if (user) {
-        const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
+    let user;
 
-        res.cookie('Token', token, {
-            httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            sameSite: "strict"
-        });
+    if (userExists) {
+        user = await User.findOneAndUpdate({ email }, { last_signed_in: new Date() }, { new: true })
+    } else {
 
-        res.status(202).json({
-            success: true,
-            message: "User Logged In",
-            content: user
+        const name = email.split("@")[0]
+
+        console.log(email, email.split("@"), email.split("@")[0])
+
+        const newUser = new User({
+            email,
+            name,
+            last_signed_in: new Date()
         })
 
-    } else {
+        user = await newUser.save()
+    }
+
+    await OTP.findOneAndDelete({ email })
+
+    if (!user) {
         throw new CustomError("Cannot create the user", 400)
     }
+
+    const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.cookie('Token', token, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: "strict"
+    });
+
+    res.status(202).json({
+        success: true,
+        message: "User Logged In",
+        content: user
+    })
+
 }
 
 

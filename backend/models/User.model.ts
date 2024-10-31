@@ -6,6 +6,10 @@ export const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    name: {
+        type: String,
+        required: true
+    },
     last_signed_in: {
         type: Date
     }

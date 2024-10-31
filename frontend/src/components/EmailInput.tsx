@@ -26,7 +26,7 @@ export default function EmailInput({ setShow }: EmailInputProps) {
             const isSuccess = await requestForOtp(email)
 
             if (isSuccess) {
-                toast.success('An OTP is send to your email', {
+                toast.success('OTP is send to your email', {
                     autoClose: 2000
                 })
                 setSearchParams({ email })

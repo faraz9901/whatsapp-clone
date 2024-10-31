@@ -12,22 +12,22 @@ export default function SideBar() {
             </div>
 
             <div className="flex-grow flex flex-col gap-8 ">
-                <div className="inline-flex gap-2 hover:cursor-pointer">
+                <div className="inline-flex gap-2 hover:cursor-pointer hover:scale-105  active:scale-95">
                     <MessageSquareText />Chat
                 </div>
-                <div className="inline-flex gap-2 hover:cursor-pointer">
+                <div className="inline-flex gap-2 hover:cursor-pointer hover:scale-105  active:scale-95">
                     <Settings /> Setting
                 </div>
-                <div className="inline-flex gap-2 hover:cursor-pointer">
+                <div className="inline-flex gap-2 hover:cursor-pointer hover:scale-105  active:scale-95">
                     <Send /> Invite a friend
                 </div>
-                <div className="inline-flex gap-2 hover:cursor-pointer">
+                <div className="inline-flex gap-2 hover:cursor-pointer  hover:scale-105  active:scale-95">
                     <Info /> About
                 </div>
 
             </div>
 
-            <div onClick={logout} className="inline-flex gap-2 hover:cursor-pointer  hover:scale-105 p-2 rounded-md active:scale-95">
+            <div onClick={logout} className="inline-flex gap-2 hover:cursor-pointer  hover:scale-105  active:scale-95">
                 <LogOut />  Logout
             </div>
         </section>
