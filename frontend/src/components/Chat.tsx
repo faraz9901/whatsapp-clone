@@ -23,8 +23,7 @@ export default function Chat() {
 
 
                 <div className="flex gap-2 items-center">
-                    <input type="text" className="rounded-full px-3 py-1 h-10 flex-grow focus:outline-none  text-black" placeholder="Type your message here..." />
-
+                    <textarea className="rounded-lg px-3 py-1 h-10 flex-grow focus:outline-none  text-black" placeholder="Type your message here..." ></textarea>
 
                     <input type="file" id="attach-files" hidden />
                     <label htmlFor="attach-files" className="cursor-pointer  active:scale-90"><Paperclip color="white" /></label>

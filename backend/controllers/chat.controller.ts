@@ -5,7 +5,6 @@ export interface MyRequest extends Request {
 }
 
 export async function getChat(req: MyRequest, res: Response) {
-    console.log(req.user._id);
 
     res.status(200).json({ message: "Ok" })
 }

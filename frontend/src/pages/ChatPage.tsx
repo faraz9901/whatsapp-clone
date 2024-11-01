@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import ChatScreen from "../components/ChatScreen";
 import SideBar from "../components/SideBar";
+import AddFriendModal from "../components/AddFriendModal";
 
 export default function ChatPage(): JSX.Element {
 
@@ -14,6 +15,7 @@ export default function ChatPage(): JSX.Element {
                 <SideBar />
                 <ChatScreen />
             </div>
+            <AddFriendModal />
         </main>
     )
 }

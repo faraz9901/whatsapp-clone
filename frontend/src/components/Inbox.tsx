@@ -1,3 +1,5 @@
+import { useChatStore } from "../store/useChatStore"
+import AddFriendModal from "./AddFriendModal"
 import Friend from "./Friend"
 
 const chats = [{
@@ -38,9 +40,24 @@ const chats = [{
 ]
 
 export default function Inbox() {
+
+    const setOpen = useChatStore(state => state.setAddFriendModal)
+
     return (
         <section className="background-color w-1/3 p-3 rounded-lg h-[75vh] overflow-auto">
-            <div className="text-semibold">Inbox</div>
+            <div className="flex justify-between">
+                <h3 className="font-semibold">
+                    Inbox
+                </h3>
+
+                <button
+                    type="button"
+                    className="bg-pink-700 duration-300 focus:outline-none rounded-lg px-2 py-1 text-white active:scale-95"
+                    onClick={() => setOpen(true)}
+                >
+                    +Add Friends
+                </button>
+            </div>
 
             <div className="py-4 ">
                 {chats?.map((chat, i) => (

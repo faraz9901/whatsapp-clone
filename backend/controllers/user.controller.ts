@@ -47,8 +47,6 @@ export async function validateOtp(req: Request, res: Response) {
 
         const name = email.split("@")[0]
 
-        console.log(email, email.split("@"), email.split("@")[0])
-
         const newUser = new User({
             email,
             name,
@@ -115,7 +113,6 @@ export async function loginUser(req: Request, res: Response) {
 }
 
 export const getCurrentUser = (req: MyRequest, res: Response) => {
-    console.log(req.user);
     res.status(200).json({
         success: true,
         content: req.user
