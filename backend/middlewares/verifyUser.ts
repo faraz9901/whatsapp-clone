@@ -13,7 +13,12 @@ export const verifyUser = async (req: any, res: Response, next: NextFunction) =>
         throw new CustomError("Token not provided! Please Sign In", 401)
     }
 
-    const data: any = jwt.verify(token, env.JWT_SECRET)
+    let data: any;
+    try {
+        data = jwt.verify(token, env.JWT_SECRET)
+    } catch (error) {
+        throw new CustomError("Token not provided! Please Sign In ", 401)
+    }
 
     if (!data) {
         throw new CustomError("Token not provided! Please Sign In ", 401)
