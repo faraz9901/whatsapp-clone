@@ -130,3 +130,26 @@ export const logoutUser = (req: Request, res: Response) => {
     })
 
 }
+
+export const usersList = async (req: Request, res: Response) => {
+    const { search_query } = req.query
+
+    if (!search_query) return res.end()
+
+    const regex = new RegExp(search_query.toString(), "i")
+
+    const query = {
+        $or: [
+            { email: regex },
+            { name: regex }
+        ]
+    }
+
+    const users = await User.find(query, { email: 1, name: 1 }).limit(4)
+
+    res.status(200).json({
+        success: true,
+        content: users
+    })
+
+}

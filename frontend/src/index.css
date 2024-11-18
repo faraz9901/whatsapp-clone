@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .background-color {
-    @apply bg-purple-300 bg-opacity-40
+    @apply bg-gray-800 bg-opacity-40
 }
 
 

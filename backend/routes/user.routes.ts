@@ -1,5 +1,5 @@
 import express from "express";
-import { validateOtp, loginUser, logoutUser, getCurrentUser } from "../controllers/user.controller";
+import { validateOtp, loginUser, logoutUser, getCurrentUser, usersList } from "../controllers/user.controller";
 import { tryCatch } from "../utils/tryCatch";
 import { verifyUser } from "../middlewares/verifyUser";
 
@@ -13,5 +13,6 @@ router.get("/user", tryCatch(verifyUser), tryCatch(getCurrentUser))
 
 router.put("/logout", tryCatch(logoutUser))
 
+router.get("/", tryCatch(verifyUser), tryCatch(usersList))
 
 export default router;

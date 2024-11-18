@@ -55,7 +55,7 @@ export default function Inbox() {
                     className="bg-pink-700 duration-300 focus:outline-none rounded-lg px-2 py-1 text-white active:scale-95"
                     onClick={() => setOpen(true)}
                 >
-                    +Add Friends
+                    Send Message
                 </button>
             </div>
 
