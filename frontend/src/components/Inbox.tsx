@@ -1,5 +1,4 @@
 import { useChatStore } from "../store/useChatStore"
-import AddFriendModal from "./AddFriendModal"
 import Friend from "./Friend"
 
 const chats = [{

@@ -7,7 +7,7 @@ import { CustomError } from "../utils/CustomError";
 
 export const verifyUser = async (req: any, res: Response, next: NextFunction) => {
 
-    const token = req?.cookies?.Token
+    const token = req?.cookies["fChatToken"]
 
     if (!token) {
         throw new CustomError("Token not provided! Please Sign In", 401)

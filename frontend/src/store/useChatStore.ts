@@ -1,19 +1,14 @@
 import { create } from "zustand"
+import { User } from "../types"
 
-export type User = {
-    email: string
-    name: string
-    _id: string
-}
-
-type useChatType = {
+type useChat = {
     isAddFriendModalOpen: boolean
     setAddFriendModal: (value: boolean) => void
     selectedFriend: User | null
     setSelectedFriend: (value: User) => void
 }
 
-export const useChatStore = create<useChatType>((set) => {
+export const useChatStore = create<useChat>((set) => {
 
     const setAddFriendModal = (value: boolean) => {
         set({ isAddFriendModalOpen: value })

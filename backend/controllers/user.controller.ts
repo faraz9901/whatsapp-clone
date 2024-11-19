@@ -64,7 +64,7 @@ export async function validateOtp(req: Request, res: Response) {
 
     const token = jwt.sign({ id: user._id }, env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.cookie('Token', token, {
+    res.cookie('fChatToken', token, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         sameSite: "strict"
@@ -131,17 +131,23 @@ export const logoutUser = (req: Request, res: Response) => {
 
 }
 
-export const usersList = async (req: Request, res: Response) => {
+export const usersList = async (req: MyRequest, res: Response) => {
     const { search_query } = req.query
+    const { _id } = req.user
 
     if (!search_query) return res.end()
 
     const regex = new RegExp(search_query.toString(), "i")
 
     const query = {
-        $or: [
-            { email: regex },
-            { name: regex }
+        $and: [
+            { _id: { $ne: _id } },
+            {
+                $or: [
+                    { email: regex },
+                    { name: regex }
+                ]
+            }
         ]
     }
 

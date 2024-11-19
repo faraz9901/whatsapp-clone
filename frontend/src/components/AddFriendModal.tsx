@@ -91,7 +91,7 @@ export default function AddFriendModal() {
 
     return (
 
-        <div className="fixed h-screen w-screen backdrop-blur-sm left-0 top-0 z-10" >
+        <div className="fixed h-screen w-screen backdrop-blur-sm left-0 top-0 z-10 " >
 
             <div ref={modalRef} className="fixed top-1/4 left-1/3 w-1/3 rounded-lg z-20  min-h-16 bg-gray-200 p-2 ">
 
@@ -104,8 +104,7 @@ export default function AddFriendModal() {
                     onChange={handleOnChange}
                 />
 
-                <div className="bg-gray-400 h-[1px] my-2" />
-
+                <div className="bg-gray-400  h-[1px] my-2" />
                 {FriendsList && FriendsList.map((friend: any, i) => (
                     <div key={i} onClick={() => onSuggestionClick(i)} onMouseOver={() => setFocus(i)} className={`cursor-pointer flex gap-3 items-center font-semibold  px-2 py-3 border border-gray-400 rounded-lg ${i == focus ? "bg-gray-500 text-white" : "text-black"}`}>
                         {friend.profile_photo ?
