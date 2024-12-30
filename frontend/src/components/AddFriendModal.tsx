@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState, ChangeEvent } from "react"
-import { useChatStore, User as UserType } from "../store/useChatStore"
+import { useChatStore } from "../store/useChatStore"
 import { request, tryCatch } from "../utils/functions"
 import { User } from "lucide-react"
+import { User as UserType } from "../types"
 
 export default function AddFriendModal() {
 
@@ -102,6 +103,7 @@ export default function AddFriendModal() {
                     onKeyDown={handleKeyDown}
                     value={friendName}
                     onChange={handleOnChange}
+                    autoFocus
                 />
 
                 <div className="bg-gray-400  h-[1px] my-2" />
@@ -112,7 +114,7 @@ export default function AddFriendModal() {
                             :
                             <User className="rounded-full text-center bg-white  w-[50px] h-[50px] border-2 border-white text-gray-600 " />
                         }
-                        {friend.name}
+                        {friend.name} - <span className="text-sm text-gray-600">{friend.email}</span>
                     </div>
                 ))}
 

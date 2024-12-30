@@ -1,8 +1,6 @@
 import { create } from "zustand"
 import { Status } from "../types"
 
-
-
 type GeneralStore = {
     status: Status
     setStatus: (value: Status) => void
